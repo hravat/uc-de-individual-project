@@ -1,0 +1,14 @@
+{	"type":"record",
+	"name":"riverflow",
+	"fields":[
+		{
+		"name":"locationId",
+		"type":"string",
+		"default":"Mising"
+		},
+		{
+		"name":"InsertTime",
+		"type":"string",
+		"default":"01-Apr-1970"
+		}
+		]}

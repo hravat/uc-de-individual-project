@@ -1,0 +1,7 @@
+ db.inventory.update( { "message.locationID": "1698009" }, 
+                    { "$set": { "message.InsertTime": "2026-05-03 12:15:03" } }, 
+                    { upsert: true });
+                    
+ db['river-flow-avro'].update( { "message.locationID": "1698009" }, 
+ 				{ "$set": { "message.InsertTime": "2027-05-03 12:15:03" } }, 
+ 				{ upsert: true });
