@@ -24,15 +24,16 @@ def get_schema_from_registry(schema_registry_url, schema_id):
 def get_all_json_response():
     query = """ 
     
-        query {
-    
-            getObservations(filter: { locations: {  }, observationTypes: FLOW }) {
-    
-                locationId
-    
-            }
-    
-        }
+query {
+	getObservations {
+		locationId
+		name
+		nztmx
+		nztmy
+		type
+		unit
+	}
+}
     
     """
     
@@ -105,7 +106,7 @@ schema_registry_client = SchemaRegistryClient(schema_registry_conf)
 # Configure AvroProducer
 #with open("riverflow.avsc") as f:
 #    value_schema = f.read()
-schema_id='9'
+schema_id='10'
 value_schema = get_schema_from_registry(schema_registry_conf['url'],schema_id)
 avro_serializer = AvroSerializer(schema_registry_client, value_schema)
 
@@ -124,7 +125,7 @@ msg_user_1 = get_all_json_response()
 for loc_id in msg_user_1['data']['getObservations']:
     loc_id['InsertTime']=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     avro_producer.produce(
-    topic="riverflow-avro",
+    topic="riverflow-avro-master-data",
     value=avro_serializer(loc_id, SerializationContext("riverflow", MessageField.VALUE)),
 	)
 

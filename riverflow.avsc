@@ -7,6 +7,31 @@
 		"default":"Mising"
 		},
 		{
+		"name":"name",
+		"type":"string",
+		"default":"Mising"
+		},
+		{
+		"name":"nztmx",
+		"type":"int",
+		"default":-1
+		},
+		{
+		"name":"nztmy",
+		"type":"int",
+		"default":-1
+		},
+		{
+		"name":"type",
+		"type":"string",
+		"default":"Mising"
+		},
+		{
+		"name":"unit",
+		"type":"string",
+		"default":"Mising"
+		},
+		{
 		"name":"InsertTime",
 		"type":"string",
 		"default":"01-Apr-1970"

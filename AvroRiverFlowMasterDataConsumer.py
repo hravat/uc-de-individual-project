@@ -14,7 +14,7 @@ def decode(msg_value):
 mongodb_uri = 'mongodb+srv://hravat:hravat@cluster0.7wqtwdz.mongodb.net/de-river-flow'
 client = MongoClient(mongodb_uri)
 db = client['de-river-flow']
-collection = db['river-flow-avro']
+collection = db['river-flow-master-data']
 
 try:
     # Attempt to connect to the MongoDB Atlas cluster
@@ -46,7 +46,7 @@ avro_consumer_config = {
 consumer = AvroConsumer(avro_consumer_config)
 
 # Subscribe to Kafka topic
-consumer.subscribe(['riverflow-avro'])
+consumer.subscribe(['riverflow-avro-master-data'])
 
 # Start consuming messages
 try:
@@ -58,7 +58,13 @@ try:
         message_value = msg.value() 
         document = {'message': message_value}
         query = {"message.locationId": message_value['locationId']}
-       	update = {"$set": {"message.InsertTime": message_value['InsertTime']}}
+       	update = {"$set": {"message.InsertTime": message_value['InsertTime'],
+       		           "message.name": message_value['name'],
+      			   "message.nztmx": message_value['nztmx'],
+      			   "message.nztmy": message_value['nztmy'],
+      			   "message.type": message_value['type'],
+      			    "message.unit": message_value['unit'],  			 		           				
+       			  }}
        	collection.update_one(query, update, upsert=True)
 #        collection.insert_one(document)
         consumer.commit()
