@@ -6,7 +6,7 @@ from confluent_kafka.serialization import (
     MessageField,
 )
 import requests
-from datetime import datetime
+from datetime import datetime,timedelta
 
 # Get the current timestamp
 
@@ -21,21 +21,29 @@ def get_schema_from_registry(schema_registry_url, schema_id):
 
 
 ###########################
+
+current_time = datetime.now()
+end_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
+two_hours_prior = current_time - timedelta(hours=2)
+start_time = two_hours_prior.strftime("%Y-%m-%d %H:%M:%S")
+ 
+
 def get_all_json_response():
     query = """ 
     
 query {
 	getObservations {
 		locationId
-		name
-		nztmx
-		nztmy
-		type
-		unit
+		observations(filter: { start: \""""+start_time+"""\", end: \""""+end_time+"""\" }) {
+			qualityCode
+			timestamp
+			value
+		}
 	}
 }
     
     """
+    
     
     
     
@@ -76,7 +84,7 @@ query {
     # Send the POST request to the GraphQL endpoint
     
     response = requests.post(graphql_endpoint, headers=headers, json=payload)
-    
+    print(response)
     
     
     # Check if the request was successful (status code 200)
@@ -104,9 +112,9 @@ schema_registry_conf = {'url': 'http://localhost:8081'}
 schema_registry_client = SchemaRegistryClient(schema_registry_conf)
 
 # Configure AvroProducer
-#with open("riverflow_master.avsc") as f:
+#with open("riverflow_transaction.avsc") as f:
 #    value_schema = f.read()
-schema_id='11'
+schema_id='13'
 value_schema = get_schema_from_registry(schema_registry_conf['url'],schema_id)
 avro_serializer = AvroSerializer(schema_registry_client, value_schema)
 
@@ -117,17 +125,23 @@ producer_conf = {'bootstrap.servers': 'localhost:9092'}
 avro_producer = Producer(producer_conf)
 
 # Produce Avro messages
-#msg_user_1 =  {'data':{'getObservations':{"locationId": "TestingRecord"}}}
-#avro_producer.produce(topic='my_topic', value=user)
 msg_user_1 = get_all_json_response()
-#print(msg_user)
 
-for loc_id in msg_user_1['data']['getObservations']:
-    loc_id['InsertTime']=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    avro_producer.produce(
-    topic="riverflow-avro-master-data",
-    value=avro_serializer(loc_id, SerializationContext("riverflow_master", MessageField.VALUE)),
-	)
+for flow_data in msg_user_1['data']['getObservations']:
+    loc_id = flow_data["locationId"]
+    for observation in flow_data['observations']:
+    	#print(observation)
+    	msg_for_insert = dict()
+    	msg_for_insert["locationId"] = loc_id
+    	msg_for_insert["qualityCode"] = observation["qualityCode"]
+    	msg_for_insert["ObservationTime"] = observation["timestamp"]
+    	msg_for_insert["value"] = observation["value"]
+    	msg_for_insert['InsertTime']=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    	
+    	avro_producer.produce(
+    	topic="riverflow-transaction-data",
+    	value=avro_serializer(msg_for_insert, SerializationContext("riverflow-transaction", MessageField.VALUE)),
+    		)
 
 
 
