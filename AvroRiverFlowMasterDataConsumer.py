@@ -56,14 +56,14 @@ try:
             continue
         print("Received message: {}".format(msg.value()))
         message_value = msg.value() 
-        document = {'message': message_value}
-        query = {"message.locationId": message_value['locationId']}
-       	update = {"$set": {"message.InsertTime": message_value['InsertTime'],
-       		           "message.name": message_value['name'],
-      			   "message.nztmx": message_value['nztmx'],
-      			   "message.nztmy": message_value['nztmy'],
-      			   "message.type": message_value['type'],
-      			    "message.unit": message_value['unit'],  			 		           				
+        #document = message_val
+        query = {"locationId": message_value['locationId']}
+       	update = {"$set": {"InsertTime": message_value['InsertTime'],
+       		           "name": message_value['name'],
+      			   "nztmx": message_value['nztmx'],
+      			   "nztmy": message_value['nztmy'],
+      			   "type": message_value['type'],
+      			   "unit": message_value['unit'],  			 		           				
        			  }}
        	collection.update_one(query, update, upsert=True)
 #        collection.insert_one(document)

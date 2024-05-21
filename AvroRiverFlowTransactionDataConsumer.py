@@ -48,7 +48,7 @@ avro_consumer_config = {
 consumer = AvroConsumer(avro_consumer_config)
 
 # Subscribe to Kafka topic
-consumer.subscribe(['riverflow-transaction-data'])
+consumer.subscribe(['river-flow-transaction-data'])
 
 # Start consuming messages
 try:

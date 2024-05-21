@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 default_args = {
     'owner': 'airflow',
     'depends_on_past': False,
-    'start_date': datetime(2024, 5, 12),
+    'start_date': datetime(2024, 4, 30),
     'email_on_failure': False,
     'email_on_retry': False,
     'retries':0
@@ -13,19 +13,19 @@ default_args = {
 }
 
 dag = DAG(
-    'kafka_master_data_producer_riverflow',
+    'kafka_transaction_data_consumer_riverflow',
     default_args=default_args,
     description='Run Python script in Conda environment using BashOperator',
-    schedule_interval= '*/5 * * * *',  # Run every 5 minutes,
+    schedule_interval= None,  # Run every 5 minutes,
     catchup=False
 )
 
 conda_env_path = '/home/hravat/miniconda3/envs/uc-data-engineering-indiv-project/bin/python '
-file_name =  'AvroRiverFlowMasterDataProducer.py'
+file_name =  'AvroRiverFlowTransactionDataConsumer.py'
 file_path = '/home/hravat/DataEngineering/IndividualProject/uc-de-individual-project/'
 
 run_script_task = BashOperator(
-    task_id='kafka_master_data_producer_riverflow',
+    task_id='kafka_transaction_data_consumer_riverflow',
     bash_command=conda_env_path+file_path+file_name,
     dag=dag
 )

@@ -26,14 +26,11 @@ current_time = datetime.now()- timedelta(hours=24)
 end_time = current_time.strftime("%Y-%m-%d %H:%M:%S")
 two_hours_prior = current_time - timedelta(hours=2)
 start_time = two_hours_prior.strftime("%Y-%m-%d %H:%M:%S")
-
-#start_time = '2024-04-20 00:00:00'
-#end_time = '2024-04-20 23:30:00'
  
- 
+start_time = '2024-04-20 00:00:00'
+end_time = '2024-04-20 23:30:00'
 
 def get_all_json_response():
-    
     query = """ 
     
 query {
@@ -49,9 +46,9 @@ query {
     
     """
     
+    print(query)
     
     
-    print(query) 
     graphql_endpoint = 'https://apis.ecan.govt.nz/waterdata/observations/graphql'
     
     
@@ -100,7 +97,7 @@ query {
     
         result = response.json()
     
-        #print(result)
+ #       print(result)
         
         return result
     
@@ -144,10 +141,8 @@ for flow_data in msg_user_1['data']['getObservations']:
     	msg_for_insert["value"] = observation["value"]
     	msg_for_insert['InsertTime']=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     	
-    	#print(msg_for_insert)
-    	
     	avro_producer.produce(
-    	topic="river-flow-transaction-data",
+    	topic="riverflow-transaction-data",
     	value=avro_serializer(msg_for_insert, SerializationContext("riverflow-transaction", MessageField.VALUE)),
     		)
 
@@ -155,19 +150,10 @@ for flow_data in msg_user_1['data']['getObservations']:
 
 print('Message stage reached')
 
-msg_for_insert = dict()
-msg_for_insert["locationId"] = '-1'
-msg_for_insert["qualityCode"] = '-200'
-msg_for_insert["ObservationTime"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-msg_for_insert["value"] = '-1'
-msg_for_insert['InsertTime']=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-
-#print(msg_for_insert) 
-
-avro_producer.produce(
-    	topic="river-flow-transaction-data",
-    	value=avro_serializer(msg_for_insert, SerializationContext("riverflow-transaction", MessageField.VALUE)),
-    		)
+#avro_producer.produce(
+#    topic="riverflow-avro",
+#    value=avro_serializer(msg_user, SerializationContext("riverflow", MessageField.VALUE)),
+#)
 
 avro_producer.flush()
 
