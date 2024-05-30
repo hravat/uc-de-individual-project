@@ -130,5 +130,5 @@ def get_location_transaction_data():
     except Exception as e:
         return f"Error: {e}", 500                      
         
-app.run(debug=True)       
+app.run(host='0.0.0.0', port=5000)       
         
