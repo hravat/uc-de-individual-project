@@ -7,6 +7,7 @@ from confluent_kafka.serialization import (
 )
 import requests
 from datetime import datetime,timedelta
+import os 
 
 # Get the current timestamp
 
@@ -51,14 +52,14 @@ query {
     
     
     
-    print(query) 
+    #print(query) 
     graphql_endpoint = 'https://apis.ecan.govt.nz/waterdata/observations/graphql'
     
     
     
     # Define the subscription key
     
-    subscription_key = '00474accb6494ab2bdb1239058f18996'
+    subscription_key = os.environ['ECAN_SUBSCRIPTION_KEY']
     
     
     
@@ -89,7 +90,7 @@ query {
     # Send the POST request to the GraphQL endpoint
     
     response = requests.post(graphql_endpoint, headers=headers, json=payload)
-    print(response)
+    #print(response)
     
     
     # Check if the request was successful (status code 200)
@@ -116,14 +117,15 @@ query {
 schema_registry_conf = {'url': 'http://localhost:8081'}
 schema_registry_client = SchemaRegistryClient(schema_registry_conf)
 
-# Configure AvroProducer
-#with open("riverflow_transaction.avsc") as f:
+# Configure AvroProducer for first run
+#with open("mongodb-schemas/riverflow_transaction.avsc") as f:
 #    value_schema = f.read()
+
 schema_id='13'
 value_schema = get_schema_from_registry(schema_registry_conf['url'],schema_id)
 avro_serializer = AvroSerializer(schema_registry_client, value_schema)
 
-print(value_schema)
+#print(value_schema)
 print('Read in  schema')
 
 producer_conf = {'bootstrap.servers': 'localhost:9092'}
@@ -131,7 +133,7 @@ avro_producer = Producer(producer_conf)
 
 # Produce Avro messages
 msg_user_1 = get_all_json_response()
-print(msg_user_1) 
+#print(msg_user_1) 
 
 for flow_data in msg_user_1['data']['getObservations']:
     loc_id = flow_data["locationId"]
@@ -155,12 +157,12 @@ for flow_data in msg_user_1['data']['getObservations']:
 
 print('Message stage reached')
 
-msg_for_insert = dict()
-msg_for_insert["locationId"] = '-1'
-msg_for_insert["qualityCode"] = '-200'
-msg_for_insert["ObservationTime"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-msg_for_insert["value"] = '-1'
-msg_for_insert['InsertTime']=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+#msg_for_insert = dict()
+#msg_for_insert["locationId"] = '-1'
+#msg_for_insert["qualityCode"] = '-200'
+#msg_for_insert["ObservationTime"] = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+#msg_for_insert["value"] = '-1'
+#msg_for_insert['InsertTime']=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
 
 #print(msg_for_insert) 
 

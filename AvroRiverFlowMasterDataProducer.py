@@ -7,6 +7,7 @@ from confluent_kafka.serialization import (
 )
 import requests
 from datetime import datetime
+import os 
 
 # Get the current timestamp
 
@@ -45,8 +46,7 @@ query {
     
     # Define the subscription key
     
-    subscription_key = '00474accb6494ab2bdb1239058f18996'
-    
+    subscription_key = os.environ['ECAN_SUBSCRIPTION_KEY']
     
     
     # Set the request headers, including the content type
@@ -103,14 +103,15 @@ query {
 schema_registry_conf = {'url': 'http://localhost:8081'}
 schema_registry_client = SchemaRegistryClient(schema_registry_conf)
 
-# Configure AvroProducer
-#with open("riverflow_master.avsc") as f:
+# Configure AvroProducer for first run
+#with open("mongodb-schemas/riverflow_master.avsc") as f:
 #    value_schema = f.read()
+
 schema_id='11'
 value_schema = get_schema_from_registry(schema_registry_conf['url'],schema_id)
 avro_serializer = AvroSerializer(schema_registry_client, value_schema)
 
-print(value_schema)
+#print(value_schema)
 print('Read in  schema')
 
 producer_conf = {'bootstrap.servers': 'localhost:9092'}
@@ -125,7 +126,7 @@ msg_user_1 = get_all_json_response()
 for loc_id in msg_user_1['data']['getObservations']:
     loc_id['InsertTime']=datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     avro_producer.produce(
-    topic="riverflow-avro-master-data",
+    topic="river-flow-master-data",
     value=avro_serializer(loc_id, SerializationContext("riverflow_master", MessageField.VALUE)),
 	)
 

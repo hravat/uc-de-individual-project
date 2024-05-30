@@ -2,6 +2,7 @@ from confluent_kafka import avro
 from confluent_kafka.avro import AvroConsumer
 from confluent_kafka.avro.serializer import SerializerError
 from pymongo import MongoClient
+import os
 
 ######Serilization Error 
 def decode(msg_value):
@@ -11,7 +12,7 @@ def decode(msg_value):
     return event_dict
 
 ##Mongo DB Config
-mongodb_uri = 'mongodb+srv://hravat:hravat@cluster0.7wqtwdz.mongodb.net/de-river-flow'
+mongodb_uri = os.environ['MONGODB_ATLAS_URL']
 client = MongoClient(mongodb_uri)
 db = client['de-river-flow']
 collection = db['river-flow-master-data']
@@ -46,7 +47,7 @@ avro_consumer_config = {
 consumer = AvroConsumer(avro_consumer_config)
 
 # Subscribe to Kafka topic
-consumer.subscribe(['riverflow-avro-master-data'])
+consumer.subscribe(['river-flow-master-data'])
 
 # Start consuming messages
 try:

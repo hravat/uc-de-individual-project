@@ -1,9 +1,10 @@
 from flask import Flask,jsonify,request
 from flask_pymongo import PyMongo
-from datetime import datetime
+from datetime import datetime  
+import os 
 
 app = Flask(__name__)
-app.config["MONGO_URI"] = "mongodb+srv://hravat:hravat@cluster0.7wqtwdz.mongodb.net/de-river-flow"
+app.config["MONGO_URI"] = os.environ['MONGODB_ATLAS_URL']
 mongo = PyMongo(app)
 
 @app.route("/")

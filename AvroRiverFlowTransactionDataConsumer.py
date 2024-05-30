@@ -4,6 +4,7 @@ from confluent_kafka.avro.serializer import SerializerError
 from pymongo import MongoClient
 from datetime import datetime,timezone
 import bson
+import os 
 
 ######Serilization Error 
 def decode(msg_value):
@@ -13,7 +14,7 @@ def decode(msg_value):
     return event_dict
 
 ##Mongo DB Config
-mongodb_uri = 'mongodb+srv://hravat:hravat@cluster0.7wqtwdz.mongodb.net/de-river-flow'
+mongodb_uri = os.environ['MONGODB_ATLAS_URL']
 client = MongoClient(mongodb_uri)
 db = client['de-river-flow']
 collection = db['river-flow-transaction-data']
