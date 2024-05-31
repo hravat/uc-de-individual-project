@@ -24,12 +24,12 @@ dag = DAG(
 
 
 conda_env_path = os.environ['DE_CONDA_ENV']
-file_name =  'AvroRiverFlowTranasctionDataProducer.py'
+file_name =  'AvroRiverFlowTransactionDataProducer.py'
 file_path = os.environ['DE_KAFKA_FILE_PATH']
 
 run_script_task = BashOperator(
     task_id='kafka_transaction_data_producer_riverflow',
-    bash_command=conda_env_path+file_path+file_name,
+    bash_command=conda_env_path+' '+file_path+file_name,
     dag=dag
 )
 
