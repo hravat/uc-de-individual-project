@@ -1,0 +1,10 @@
+query {
+	getObservations {
+		locationId
+		observations(filter: { start: {start_time} , end:{end_time} }) {
+			qualityCode
+			timestamp
+			value
+		}
+	}
+}

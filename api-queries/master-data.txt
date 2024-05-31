@@ -1,0 +1,10 @@
+query {
+	getObservations {
+		locationId
+		name
+		nztmx
+		nztmy
+		type
+		unit
+	}
+}

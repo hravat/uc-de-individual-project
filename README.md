@@ -89,7 +89,7 @@ PLeasee head [Mongo DB Atlas]{https://cloud.mongodb.com/} for a mongo DB Account
 
 Create a database ``` de-river-flow ```
 
-Create tow documents ``` river-flow-master-data ``` and ```  river-flow-transaction-data ```
+Create two documents ``` river-flow-master-data ``` and ```  river-flow-transaction-data ```
 
 Set  the Environment Variable ``` MONGODB_ATLAS_URL ``` to the URL of the MongoDB Cluster 
 
@@ -101,6 +101,8 @@ To get the URL please go to Connect in MongoDB Atlas and Click on Shell
 I HAVE NOTE BEEN ABLE TO COME UP WITH A CLEAN WAY TO SET THIS UP)
 
 Please start kafka and Confluent Kafka 
+
+Set the Environment variable ``` DE_ECAN_QUERY_PATH ``` to the path api-queries
 
 Create the kafka topics using the blow commands after naving ating to the confluent bin directory :- 
 
@@ -164,6 +166,11 @@ Then check if you are able to view data in mongodb
 Copy the files in airflow-dags folder to the airflow dags path  : - 
 
 ``` ~/airflow/dags ```
+
+Set  the Environment Variable ``` DE_CONDA_ENV ``` to the path of the Data Engineering Conda Env 
+
+Set  the Environment Variable ``` DE_KAFKA_FILE_PATH ``` where the consumer and producer scripts for python are set 
+
 
 Activate the conda environment start airflow services with the below commands and log into airflow 
 

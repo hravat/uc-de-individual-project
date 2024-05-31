@@ -1,6 +1,7 @@
 from airflow import DAG
 from airflow.operators.bash_operator import BashOperator
 from datetime import datetime, timedelta
+import os
 
 default_args = {
     'owner': 'airflow',
@@ -20,9 +21,9 @@ dag = DAG(
     catchup=False
 )
 
-conda_env_path = '/home/hravat/miniconda3/envs/uc-data-engineering-indiv-project/bin/python '
+conda_env_path = os.environ['DE_CONDA_ENV']
 file_name =  'AvroRiverFlowMasterDataConsumer.py'
-file_path = '/home/hravat/DataEngineering/IndividualProject/uc-de-individual-project/'
+file_path = os.environ['DE_KAFKA_FILE_PATH']
 
 run_script_task = BashOperator(
     task_id='kafka_master_data_consumer_riverflow',

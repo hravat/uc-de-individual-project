@@ -59,14 +59,14 @@ try:
         message_value = msg.value() 
         #document = message_val
         query = {"locationId": message_value['locationId']}
-       	update = {"$set": {"InsertTime": message_value['InsertTime'],
-       		           "name": message_value['name'],
-      			   "nztmx": message_value['nztmx'],
-      			   "nztmy": message_value['nztmy'],
-      			   "type": message_value['type'],
-      			   "unit": message_value['unit'],  			 		           				
-       			  }}
-       	collection.update_one(query, update, upsert=True)
+        update = {"$set": {"InsertTime": message_value['InsertTime'],
+                    "name": message_value['name'],
+                    "nztmx": message_value['nztmx'],
+                    "nztmy": message_value['nztmy'],
+                    "type": message_value['type'],
+                    "unit": message_value['unit'],  			 		           				
+                    }}
+        collection.update_one(query, update, upsert=True)
 #        collection.insert_one(document)
         consumer.commit()
 except KeyboardInterrupt:
